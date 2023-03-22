@@ -64,7 +64,7 @@ let [validation,setvalidation] = useState(initdata);
               placeholder="Enter email"
             />
           </div>
-          {validation.email&&<span>{validation.email}</span>}
+          {validation.email&&<span className="validate">{validation.email}</span>}
           <div className="form-group mt-3">
             <label>Password</label>
             <input
@@ -75,7 +75,7 @@ let [validation,setvalidation] = useState(initdata);
               placeholder="Enter password"
             />
           </div>
-          {validation.password&&<span>{validation.password}</span>}
+          {validation.password&&<span className="validate">{validation.password}</span>}
           <div className="d-grid gap-2 mt-3">
             <button className="btn btn-primary" onClick={handlesubmit}>
               Submit

@@ -9,6 +9,7 @@ const testroundsSchema = new Schema({
     email: {type: String, default: ""},
     round: { type: Number, default:0},
     score:{type: Number, default: 0},
+    rewards:{type: Boolean, default: false},
     createdAt:{type: Date, default: Date.now()},
 })
 

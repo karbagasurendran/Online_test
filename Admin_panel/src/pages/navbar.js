@@ -17,7 +17,7 @@ const navigate = useNavigate()
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link href="/home">Home</Nav.Link>
-            <Nav.Link href="/trainerlist">ADD Trainer</Nav.Link>
+            <Nav.Link href="/trainerlist">Trainer List</Nav.Link>
             <NavDropdown title="Logout" id="basic-nav-dropdown">
               <NavDropdown.Item onClick={removetoken}>Logout</NavDropdown.Item>
             </NavDropdown>

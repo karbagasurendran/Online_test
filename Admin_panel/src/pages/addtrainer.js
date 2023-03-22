@@ -5,11 +5,14 @@ import { Form } from "react-bootstrap"
 import {gettrainnerlist,registerTrainer} from "../Api/actions"
 import {toast} from  'react-toastify';
 import NavBar from "./navbar";
+import { registervalidation } from "../validation/register-validation";
 
 function AddTrainer(props) {
   var navigate = useNavigate();
   let [trainerList, settrinerList] = useState([]);
   let [registerdata,setregisterdata] = useState({});
+  let [validation,setvalidation] = useState({});
+
 
 
 const list=(async()=>{
@@ -21,7 +24,6 @@ const list=(async()=>{
 
 useEffect(()=>{
   list()
-
   },[])
 
 
@@ -40,14 +42,25 @@ useEffect(()=>{
 
   const handlesubmit =(async(e)=>{
     e.preventDefault()
+    setvalidation({})
+    let valid = await registervalidation(registerdata)
+    if(!valid.status){
+      setvalidation(valid.errors);
+      return false;
+    }
     console.log(registerdata,"resiterdata")
     let {success,result} = await registerTrainer(registerdata);
     if(success){
       toast.success("register successfully");
+      console.log(result,"result")
       navigate("/trainerlist");
     }else{
       toast.error("register failed")
     }
+  })
+
+  const handleback =(()=>{
+    navigate("/trainerlist")
   })
 
   return (
@@ -68,6 +81,7 @@ useEffect(()=>{
              })}
             </Form.Select>
           </div>
+          {validation.parentId&&<span className="validate">{validation.parentId}</span>}
           <div className="form-group mt-3">
             <label>Name</label>
             <input
@@ -78,6 +92,8 @@ useEffect(()=>{
               placeholder="Enter name"  
             />
           </div>
+          {validation.name&&<span className="validate">{validation.name}</span>}
+
           <div className="form-group mt-3">
             <label>Email address</label>
             <input
@@ -88,6 +104,8 @@ useEffect(()=>{
               placeholder="Enter email"
             />
           </div>
+          {validation.email&&<span className="validate">{validation.email}</span>}
+
           <div className="form-group mt-3">
             <label>Password</label>
             <input
@@ -98,6 +116,8 @@ useEffect(()=>{
               placeholder="Enter password"
             />
           </div>
+          {validation.password&&<span className="validate">{validation.password}</span>}
+
           <div className="form-group mt-3">
             <label>Confirm Password</label>
             <input
@@ -108,8 +128,12 @@ useEffect(()=>{
               placeholder="Enter password"
             />
           </div>
-          <div className="d-grid gap-2 mt-3">
-            <button type="submit" onClick={handlesubmit} className="btn btn-primary">
+          {validation.confirmpassowrd&&<span className="validate">{validation.confirmpassowrd}</span>}
+          <div className="gap-2 mt-4 row">
+            <button onClick={handleback} type="submit" className="btn btn-primary col-sm">
+              cancel
+            </button>
+            <button type="submit" onClick={handlesubmit} className="btn btn-primary col-sm">
               Submit
             </button>
           </div>

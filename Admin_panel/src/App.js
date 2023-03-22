@@ -9,6 +9,7 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import TrainerList from './pages/trainerlist';
 import AddTrainer from './pages/addtrainer';
 import ConditionRoute from './Conditionroute';
+import { ToastContainer, toast } from 'react-toastify';
 
 function App() {
   return (
@@ -19,8 +20,9 @@ function App() {
       <Route path="/auth" element={ <Auth/> } />
       <Route path="/trainerlist" element={ <ConditionRoute><TrainerList/></ConditionRoute> } />
       <Route path="/add-trainer" element={ <ConditionRoute><AddTrainer/></ConditionRoute> } />
-
       </Routes>
+      <ToastContainer />
+
     </div>
   );
 }

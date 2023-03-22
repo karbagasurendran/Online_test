@@ -7,6 +7,7 @@ import { Button,Spinner } from "react-bootstrap";
 import badgelogo  from "../assets/badge.png";
 import Web3 from "web3";
 import config from "../config/index";
+import isEmpty from "is-empty";
 
 
 function Scoreboard(props) {
@@ -17,6 +18,8 @@ let [score,setscore] = useState(0)
 let [round,setround] = useState(0)
 let [txhash,settxhash] = useState();
 let [loading,setloading] = useState();
+let [details,setdetails] = useState();
+
 
  useEffect(()=>{
   console.log(state,"statue")
@@ -28,6 +31,7 @@ let [loading,setloading] = useState();
   let {result,success} = await getstudentscroe(reqdata);
   console.log(result,'the result');
   if(success){
+    setdetails(result)
     setscore(result.score)
     setround(result.round)
   }
@@ -41,10 +45,10 @@ try{
      var address = await window.ethereum.request({ method: 'eth_requestAccounts' });
      console.log(address,"address");
      setloading(true)
-     let reqdata = {address: address[0], amount: 1};
+     let reqdata = {address: address[0], amount: 1,id:details._id};
       let {message,result,success} = await claimRewards(reqdata);
       if(success){
-        toast.success(message);
+        toast.success("Rewards claimed successfully");
         settxhash(result.txid);
         setloading(false)
       }else{
@@ -68,6 +72,7 @@ try{
     localStorage.removeItem("type");
     navigate("/auth");
   })
+  console.log(state,"state")
   return (
     <div className="Auth-form-container">
       <form className="Auth-form">
@@ -81,13 +86,15 @@ try{
             <div className="col-sm"><img src={badgelogo}  height="45"/></div>
             <div className="col-sm">{score&&<h1>{score}</h1>}</div>
           </div>
-         { score>=5?<div className="d-grid gap-2 mt-3">
+          {isEmpty(txhash)&&details&&!details.rewards&&<div>
+         { score>=5 ?<div className="d-grid gap-2 mt-3">
             <button className="btn btn-primary" onClick={handlesubmit}>
            {loading && <Spinner animation="border" size="sm" />} Claim
             </button>
           </div>:<p className="forgot-password text-right mt-2">
           Best regards try next time ...
           </p>}
+          </div>}
           {txhash&&<p className="forgot-password text-right mt-2">
           <a href={`${config.Txurl}${txhash}`} target="_blank">View Transaction</a>
           </p>}

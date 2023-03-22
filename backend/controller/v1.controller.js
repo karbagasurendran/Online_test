@@ -10,7 +10,7 @@ export const studentlogin = (async (req, res) => {
 
         let checkStudent = await db.AsyncfindOne("user",{ "email": reqBody.email ,role:"student"},{});
         if (!checkStudent) {
-        return res.status(200).json({ 'success': false, 'errors': {"email":"Invalid Email Id"},result:"" }); 
+        return res.status(200).json({ 'success': false, 'errors': {"email":"Email Id not found"},result:"" }); 
         }
         let status = await bcrypt.compare(reqBody.password, checkStudent.password)
         if(!status){
@@ -30,16 +30,19 @@ export const trainerlogin = (async (req, res) => {
     try {
         let reqBody = req.body;
 
-        let checkUser = await db.AsyncfindOne("user",{ "email": reqBody.email ,role:"trainer"},{});
-        if (!checkUser) {
-            let create = { email: reqBody.email };
-            checkUser = await db.AsyncInsert('user', create);
+        let chcekTrainer = await db.AsyncfindOne("user",{ "email": reqBody.email ,role:"trainer"},{});
+        if (!chcekTrainer) {
+        return res.status(200).json({ 'success': false, 'errors': {"email":"Email Id not found"},result:"" }); 
+        }
+        let status = await bcrypt.compare(reqBody.password, chcekTrainer.password)
+        if(!status){
+            return res.status(200).json({ 'success': false, 'errors': {"password":"Password is wrong"},result:"" }); 
         }
         let payloadData = {
-            "_id": checkUser._id
+            "_id": chcekTrainer._id
         }
         let token = await db.Logintoken("user",payloadData);
-        return res.status(200).json({ 'success': true,'message':"Login Successfully", 'result':checkUser, "token": token });
+        return res.status(200).json({ 'success': true,'message':"Login Successfully", 'result':chcekTrainer, "token": token });
     } catch (err) {
         return res.status(400).json({ 'success': false,'message':"Login Failed", 'errors': err });
     }
@@ -96,9 +99,14 @@ export const setstudentscore = (async (req, res) => {
 export const claimRewards = (async (req, res) => {
     try {
         let reqBody = req.body;
+        console.log(reqBody,"reqbody")
         let transaction = await transferToken(reqBody.amount,reqBody.address);
+        let update = {rewards:true }
+        let rewardsupdate = await db.AsyncfindOneAndUpdate("testrounds",{_id:reqBody.id},update,{new:true});
+        console.log(rewardsupdate,'updatee')
         return res.status(200).json({ 'success': true, 'message': "Rewards transfered successfully",result: transaction });
     } catch (err) {
+        console.log(err,"err")
         return res.status(400).json({ 'success': false, 'errors': err, 'message': "Rewards transfered failed", 'result': "" });
     }
 })

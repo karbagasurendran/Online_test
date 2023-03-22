@@ -37,8 +37,8 @@ console.log(state,"the state")
   console.log(studentList, "trainerlist")
   return (
     <>
-      <div style={{ marginTop: 10, alignItems: "end" }}><h1>Students Test History</h1></div>
-        <Button onClick={Logout}>Logout</Button>
+      <div><h1>Students Test History</h1></div>
+        <div className="d-grid gap-2 d-md-flex justify-content-md-end"><Button onClick={Logout}>Logout</Button></div>
       <div style={{ marginTop: 30 }}>
         <Table striped bordered hover>
           <thead>
